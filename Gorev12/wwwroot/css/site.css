@@ -1,0 +1,17 @@
+﻿.comment {
+    display: flex;
+    align-items: center;
+}
+
+.commentCount {
+    display: flex;
+    align-items: center;
+    margin-right: 10px; /* Siz istediğiniz boşluk değerini ayarlayabilirsiniz */
+    font-weight: bold;
+}
+
+    .commentCount span {
+        white-space: nowrap;
+        margin-left:4px;
+    }
+

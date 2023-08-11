@@ -1,0 +1,159 @@
+﻿@model Gorev12.Models.PostIndexViewModel
+@{
+    var counter = 0;
+
+}
+<div class="row">
+    <div class="col-md-3">
+        <form method="post" asp-action="Index" asp-controller="Post">
+            <label for="searchInput">Post Search</label>
+            <div class="input-group">
+                <input type="search" id="searchInput" name="searchTerm" class="form-control" placeholder="search" />
+                <button class="btn btn-primary" type="submit">Ara</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form method="post" asp-action="Index" asp-controller="Post">
+            <label for="searchInput">User Search</label>
+            <div class="input-group">
+                <input type="search" id="searchInput" name="searchUser" class="form-control" placeholder="search" />
+                <button class="btn btn-primary" type="submit">Ara</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3 mb-3">
+        <form method="post" asp-action="Index" asp-controller="Post">
+            <label for="searchInput">Content Search</label>
+            <div class="input-group">
+                <input type="search" id="searchInput" name="searchContent" class="form-control" placeholder="search" />
+                <button class="btn btn-primary" type="submit">Ara</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3">
+        <form method="post" asp-action="Index" asp-controller="Post">
+            <label for="searchInput">Email Search</label>
+            <div class="input-group">
+                <input type="search" id="searchInput" name="searchEmail" class="form-control" placeholder="search" />
+                <button class="btn btn-primary" type="submit">Ara</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="container-fluid d-block">
+    <form method="post" asp-action="Index" asp-controller="Post">
+        <div class="col-md-3">
+            <label for="pageSize">Show posts per page:</label>
+            <select id="pageSize" name="pageSize" onchange="this.form.submit()">
+                <option value="1">1</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+                <option value="20">20</option>
+            </select>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col">
+            <table class="table table-bordered table-striped table-hover">
+                <thead class="table-primary">
+                    <tr>
+                        <th >
+                            <a asp-action="Index" >Pic</a>
+                        </th>
+                        <th>
+                            <a asp-action="Index" asp-route-sortOrder="@ViewData["IdSortParm"]">Post Id</a>
+                        </th>
+                        <th>
+                            <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">Post Title</a>
+                        </th>
+                        <th>
+                            <a asp-action="Index" asp-route-sortOrder="@ViewData["ContentSortParm"]">Post Content↓</a>
+                        </th>
+                        <th><a asp-action="Index" asp-route-sortOrder="@ViewData["CommentsSortParm"]">Comments</a></th>
+                        <th><a asp-action="Index" asp-route-sortOrder="@ViewData["UserSortParm"]">Created By</a></th>
+                        <th>
+                            <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]">Created At</a>
+                        </th>
+                        <th><a asp-action="Index" asp-route-sortOrder="@ViewData["EmailSortParm"]">Email</a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var post in Model.Posts)
+                    {
+                        <tr>
+                            <td>
+                                <img  src=https://picsum.photos/id/@(post.CoverImageInt)/100/200 >
+                            </td>
+                            <td>@post.Id</td>
+                            <td style ="width: 200px;">@post.Title</td>
+                            <td>@post.Content</td>
+                            <td>
+
+                                <div class="d-flex align-items-center comment">
+                                    <div class="commentCount">
+                                        <span>Yorum Sayısı : </span>
+                                        <span class="comments-number fw-bold">@post.Comments.Count()</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>@post.User.Username</td>
+                            <td>@post.CreatedAt</td>
+                            <td>@post.User.Email</td>
+                        </tr>
+                        {
+                            counter++;
+                        }
+                    }
+                    <tr>
+                        <h4>Görüntülenen post sayısı @counter</h4>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-center align-items-center bg-light">
+                <p class="p-1 rounded border bg-white">
+                    Toplam @(Model.Pagination.PageCount) sayfanın @(Model.Pagination.PageNumber). sayfasındasınız
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pagination justify-content-center align-items-center">
+    <nav aria-label="Page navigation">
+
+        <ul class="pagination">
+
+            <li class="page-item @(Model.Pagination.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="1" aria-label="First">First</a>
+            </li>
+
+            <li class="page-item @(Model.Pagination.PageNumber == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Pagination.PageNumber - 1)" aria-label="Previous"> << Previous</></a>
+            </li>
+
+            @for (int i = Math.Max(1, Model.Pagination.PageNumber - 3); i <= Math.Min(Model.Pagination.PageCount, Model.Pagination.PageNumber + 3); i++)
+            {
+                <li class="page-item @(Model.Pagination.PageNumber == i ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-page="@(i)">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.Pagination.PageNumber == Model.Pagination.PageCount ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Pagination.PageNumber + 1)" aria-label="Next">Next >> </a>
+            </li>
+
+            <li class="page-item @(Model.Pagination.PageNumber == Model.Pagination.PageCount ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@(Model.Pagination.PageCount)" aria-label="Last">Last</a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+
+<div class="footer">
+    &copy; 2023 Your Website Name. All rights reserved.
+</div>
+
+
+
